@@ -37,7 +37,7 @@ public class DataSupportCompat<T extends DataSupportCompat> extends DataSupport 
      * @return 泛型实体类对象
      */
     @SuppressWarnings({"unchecked", "ReflectionForUnavailableAnnotation"})
-    private T find() {
+    protected T find() {
         try {
             Field pk = null;
             Class clazz = getGenericType();

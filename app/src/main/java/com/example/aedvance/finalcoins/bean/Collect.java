@@ -1,6 +1,6 @@
 package com.example.aedvance.finalcoins.bean;
 
-import android.content.Context;
+import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
 
@@ -13,7 +13,7 @@ import wang.relish.litepalcompat.DataSupportCompat;
  *     version: 1.0
  * </pre>
  */
-public class Collect extends DataSupportCompat<Collect>{
+public class Collect extends DataSupportCompat<Collect> {
 
     private long userId;
     private long questionId;
@@ -41,5 +41,10 @@ public class Collect extends DataSupportCompat<Collect>{
 
     public void setOptionId(long optionId) {
         this.optionId = optionId;
+    }
+
+    public static int getCollectCountByUserId(long userId) {
+        List<Collect> collects = where("userId = ?", userId + "").find(Collect.class);
+        return collects == null ? 0 : collects.size();
     }
 }

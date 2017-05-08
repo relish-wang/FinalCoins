@@ -2,6 +2,7 @@ package com.example.aedvance.finalcoins.task;
 
 import android.os.AsyncTask;
 
+import com.example.aedvance.finalcoins.App;
 import com.example.aedvance.finalcoins.bean.UserInfo;
 import com.example.aedvance.finalcoins.util.EasyCallback;
 
@@ -35,6 +36,7 @@ public class LoginTask extends AsyncTask<String, Void, UserInfo> {
         if(userInfo==null){
             callback.onFailed("用户名或密码不存在");
         }else{
+            App.USER = userInfo;
             callback.onSuccess(null);
         }
     }

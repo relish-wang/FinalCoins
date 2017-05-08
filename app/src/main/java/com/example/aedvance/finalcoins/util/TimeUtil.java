@@ -66,7 +66,7 @@ public class TimeUtil {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(new Date());
     }
 
-    public static String getNowTimeYMD(){
+    public static String getNowTimeYMD() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date());
     }
 
@@ -138,7 +138,7 @@ public class TimeUtil {
     }
 
 
-    public static Calendar datetime2Calendar(String datetime){
+    public static Calendar datetime2Calendar(String datetime) {
         long time = dateTimeToLong(datetime);
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
@@ -146,19 +146,46 @@ public class TimeUtil {
         return calendar;
     }
 
-//    /**
-//     * 当前时间是否是星期一的八点
-//     *
-//     * @return
-//     */
-//    public static boolean isMon8Clock() {
-//        long now = System.currentTimeMillis();
-//        long zero = getTodayZeroLong();
-//        long eightHours = 11 * 60 * 60 * 1000;
-//        return dayForWeek() == 1 && now - zero >= eightHours && now - zero <= eightHours + 1000 * 60;
-//    }
+    /**
+     * 当前时间是否是星期一的八点
+     *
+     * @return
+     */
+    public static boolean isMon8Clock() {
+        long now = System.currentTimeMillis();
+        long zero = getTodayZeroLong();
+        long eightHours = 11 * 60 * 60 * 1000;
+        return dayForWeek() == 1 && now - zero >= eightHours && now - zero <= eightHours + 1000 * 60;
+    }
 
-//    public static boolean isTaskOver3Days(TaskEntity task) {
-//        return System.currentTimeMillis() - dateTimeToLong(task.getuTime()) >= 3 * 24 * 60 * 60 * 1000;
-//    }
+
+    public static String getConstellationByDatetime(String date) {
+        try {
+            final String[] constellationArr = {"魔羯座", "水瓶座", "双鱼座", "牡羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "魔羯座"};
+
+            if (TextUtils.isEmpty(date) || date.equals("未设置")) {
+                return "未知星座";
+            }
+            Calendar calendar = datetime2Calendar(date);
+            int m = calendar.get(Calendar.MONTH);
+            int d = calendar.get(Calendar.DAY_OF_MONTH);
+
+            final int[] constellationEdgeDay = {20, 18, 20, 20, 20, 21, 22, 22, 22, 22, 21, 21};
+            int month = m;
+            int day = d;
+            if (day <= constellationEdgeDay[month - 1]) {
+                month = month - 1;
+            }
+            if (month >= 0) {
+                return constellationArr[month];
+            }
+            //default to return 魔羯
+            return constellationArr[11];
+        }catch (Exception e){
+            e.printStackTrace();
+            return "未知设置";
+        }
+    }
+
+
 }

@@ -1,6 +1,9 @@
 package com.example.aedvance.finalcoins.bean;
 
-import android.graphics.Path;
+import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
 
@@ -13,7 +16,7 @@ import wang.relish.litepalcompat.DataSupportCompat;
  *     version: 1.0
  * </pre>
  */
-public class Option extends DataSupportCompat<Option>{
+public class Option extends DataSupportCompat<Option> {
 
     private String name;
 
@@ -33,5 +36,26 @@ public class Option extends DataSupportCompat<Option>{
 
     public void setQuestionId(long questionId) {
         this.questionId = questionId;
+    }
+
+
+    public static List<Option> findByQuestionId(long questionId) {
+        Cursor cursor = DataSupportCompat
+                .findBySQL("select * from option where questionId = ? group by questionId"
+                        , questionId + "");
+        List<Option> options = new ArrayList<>();
+        if (cursor == null || cursor.getCount() == 0) {
+            return options;
+        }
+        if (cursor.moveToFirst()) {
+            do {
+                Option option = new Option();
+                option.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                option.setName(cursor.getString(cursor.getColumnIndex("name")));
+                option.setQuestionId(cursor.getLong(cursor.getColumnIndex("questionId")));
+                options.add(option);
+            } while (cursor.moveToNext());
+        }
+        return options;
     }
 }

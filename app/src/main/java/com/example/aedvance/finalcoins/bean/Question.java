@@ -1,5 +1,7 @@
 package com.example.aedvance.finalcoins.bean;
 
+import java.util.List;
+
 import wang.relish.litepalcompat.DataSupportCompat;
 
 /**
@@ -11,7 +13,7 @@ import wang.relish.litepalcompat.DataSupportCompat;
  *     version: 1.0
  * </pre>
  */
-public class Question extends DataSupportCompat<Question>{
+public class Question extends DataSupportCompat<Question> {
 
     private long userId;
 
@@ -31,5 +33,19 @@ public class Question extends DataSupportCompat<Question>{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Question getMostPopularFor(boolean isMale) {
+        List<Option> options;
+
+//        "select * from user where sex = ?";//男、女
+        findBySQL("select * from question q, userinfo u where q.userId = u.id and u.sex = ?", isMale ? "0" : "1");//
+
+        return null;
+    }
+
+    public static int getQuestionCountById(long userId) {
+        List<Question> questions = where("userId = ?", userId + "").find(Question.class);
+        return questions == null ? 0 : questions.size();
     }
 }

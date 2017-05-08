@@ -1,6 +1,7 @@
 package com.example.aedvance.finalcoins.bean;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.example.aedvance.finalcoins.util.SPUtil;
 
@@ -31,6 +32,7 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     private String address;
     private String birth;
 
+
     public String getName() {
         return name;
     }
@@ -56,6 +58,9 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     }
 
     public String getMail() {
+        if (TextUtils.isEmpty(mail)) {
+            return "未设置";
+        }
         return mail;
     }
 
@@ -72,6 +77,9 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     }
 
     public String getBirth() {
+        if (TextUtils.isEmpty(birth)) {
+            return "未设置";
+        }
         return birth;
     }
 
@@ -115,5 +123,11 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
         ClusterQuery clusterQuery = where("name = ?", name);
         List<UserInfo> userInfos = clusterQuery.find(UserInfo.class);
         return userInfos != null && userInfos.size() > 0;
+    }
+
+    public static UserInfo findByUserId(long userId) {
+        UserInfo u  = new UserInfo();
+        u.setId(userId);
+        return u.find();
     }
 }

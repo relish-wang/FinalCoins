@@ -1,18 +1,23 @@
 package com.example.aedvance.finalcoins.ui.fragment;
 
+import android.support.annotation.IdRes;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aedvance.finalcoins.R;
 import com.example.aedvance.finalcoins.base.BaseFragment;
-import com.example.aedvance.finalcoins.bean.Questions;
+import com.example.aedvance.finalcoins.bean.Option;
+import com.example.aedvance.finalcoins.bean.Question;
+import com.example.aedvance.finalcoins.bean.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +28,7 @@ import java.util.List;
 
 public class ZoneFragment extends BaseFragment {
 
-    List<Questions> mData = new ArrayList<>();
+    List<Question> mData = new ArrayList<>();
 
     ListView lv;
     TextView tv_no_data;
@@ -49,18 +54,7 @@ public class ZoneFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        mData = new ArrayList<Questions>() {
-            {
-                for (int i = 0; i < 16; i++) {
-                    Questions q = new Questions();
-                    q.setAuthor("Author " + i);
-                    q.setQuestion("Question " + i);
-                    add(q);
-                }
-            }
-    };
-
+        mData = Question.findAll(Question.class);
         update();
     }
 
@@ -102,22 +96,38 @@ public class ZoneFragment extends BaseFragment {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
-            Questions q = mData.get(i);
-            holder.tv_question.setText(q.getQuestion());
-            holder.tv_author.setText(q.getAuthor());
+            Question q = mData.get(i);
+            holder.tv_question.setText(q.getTitle());
+            UserInfo u = UserInfo.findByUserId(q.getUserId());
+            holder.tv_author.setText(u.getName());
+            final List<Option> options = Option.findByQuestionId(q.getId());
+            int count = 0;
+            for (Option option : options) {
+                RadioButton button = new RadioButton(getActivity());
+                button.setId(count++);
+                button.setText(option.getName());
+                holder.rg_options.addView(button);
+            }
+            holder.rg_options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                    Option option = options.get(checkedId);
+                    Toast.makeText(getActivity(), option.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
             return view;
         }
 
         class ViewHolder {
             TextView tv_question, tv_author;
-            Button btn_eat, btn_uneat;
             ImageView iv_love;
+            RadioGroup rg_options;
 
             public ViewHolder(View v) {
                 tv_question = (TextView) v.findViewById(R.id.tv_question);
                 tv_author = (TextView) v.findViewById(R.id.tv_author);
-                btn_eat = (Button) v.findViewById(R.id.btn_eat);
-                btn_uneat = (Button) v.findViewById(R.id.btn_uneat);
+                rg_options = (RadioGroup) v.findViewById(R.id.rg_options);
                 iv_love = (ImageView) v.findViewById(R.id.iv_love);
             }
 
