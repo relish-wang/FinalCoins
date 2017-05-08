@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="136px"
+        android:background="#4985d0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48px"
+            android:layout_marginTop="32px"
+            android:text="帮你选"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="80px"
+        android:background="#FFFFFF"
+        android:hint="用户名"
+        android:padding="40px"
+        android:textColorHint="#c9c9c9"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="2px"
+        android:background="#FFFFFF"
+        android:hint="密码"
+        android:inputType="textPassword"
+        android:padding="40px"
+        android:textColorHint="#c9c9c9"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_repeat_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="2px"
+        android:background="#FFFFFF"
+        android:hint="确认密码"
+        android:inputType="textPassword"
+        android:padding="40px"
+        android:textColorHint="#c9c9c9"
+        android:textSize="12sp" />
+
+    <Spinner
+        android:id="@+id/sp_sex"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="2px"
+        android:background="#FFFFFF"
+        android:entries="@array/sex"
+        android:padding="40px"
+        android:textSize="12sp"></Spinner>
+
+
+    <TextView
+        android:id="@+id/tv_birth"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="2px"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:hint="出生日期"
+        android:padding="40px"
+        android:textColorHint="#c9c9c9"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/tv_return_login"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80px"
+        android:text="已有账号，直接登录"
+        android:textColor="#4985d0"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:background="#4985d0"
+        android:padding="40px"
+        android:text="注 册"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+</LinearLayout>

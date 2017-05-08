@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.aedvance.finalcoins.ui.activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="136px"
+        android:background="#4985d0">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="帮你选"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginTop="32px"
+            android:layout_marginLeft="48px"/>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="240px"
+        android:layout_height="240px"
+        android:src="@mipmap/logo"
+        android:layout_gravity="center"
+        android:layout_marginTop="160px"/>
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:hint="用户名"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="80px"
+        android:background="#FFFFFF"
+        android:textColorHint="#c9c9c9"
+        android:padding="40px"
+        android:textSize="12sp"/>
+
+    <EditText
+        android:id="@+id/et_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:hint="密码"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:layout_marginTop="2px"
+        android:background="#FFFFFF"
+        android:inputType="textPassword"
+        android:textColorHint="#c9c9c9"
+        android:padding="40px"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/borderlessButtonStyle"
+        android:text="未有账号，前去注册"
+        android:textSize="12sp"
+        android:layout_marginLeft="80px"
+        android:textColor="#4985d0"/>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="160px"
+        android:padding="40px"
+        android:textSize="20sp"
+        android:layout_marginLeft="80px"
+        android:layout_marginRight="80px"
+        android:textColor="#FFFFFF"
+        android:background="#4985d0"
+        android:text="登 录"/>
+</LinearLayout>
