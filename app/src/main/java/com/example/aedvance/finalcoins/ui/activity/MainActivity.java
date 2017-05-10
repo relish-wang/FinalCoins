@@ -9,14 +9,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.aedvance.finalcoins.R;
 import com.example.aedvance.finalcoins.ui.fragment.InfoFragment;
 import com.example.aedvance.finalcoins.ui.fragment.MirrorFragment;
-import com.example.aedvance.finalcoins.ui.fragment.ZoneFragment;
+import com.example.aedvance.finalcoins.ui.fragment.QuestionFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
  * Created by aedvance on 2017/5/2.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -37,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainface);
 
+        initViews();
+    }
 
+    private void initViews() {
         //更改状态蓝色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.rgb(73, 133, 208));
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.vp_view);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         //添加页卡视图
-        Fragment zone = new ZoneFragment();
+        Fragment zone = new QuestionFragment();
         Fragment mirror = new MirrorFragment();
         Fragment info = new InfoFragment();
         fragments.add(zone);
@@ -65,13 +67,37 @@ public class MainActivity extends AppCompatActivity {
 
         MyPagerAdapter mAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
+        mViewPager.setOnPageChangeListener(this);
         mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
         mTabLayout.setTabsFromPagerAdapter(mAdapter);//给Tabs设置适配器
     }
 
+    boolean isCreated = false;
+
     public static void start(Context context) {
-        Intent intent = new Intent(context,MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if(!isCreated){
+            isCreated = true;
+            return;
+        }
+        if (position == 0) {
+            ((QuestionFragment) (fragments.get(0))).request();
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
 

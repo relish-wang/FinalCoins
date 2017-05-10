@@ -126,8 +126,6 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     }
 
     public static UserInfo findByUserId(long userId) {
-        UserInfo u  = new UserInfo();
-        u.setId(userId);
-        return u.find();
+        return UserInfo.find(UserInfo.class, userId);
     }
 }

@@ -1,8 +1,5 @@
 package com.example.aedvance.finalcoins.bean;
 
-import android.database.Cursor;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
@@ -22,6 +19,10 @@ public class Option extends DataSupportCompat<Option> {
 
     private long questionId;
 
+    private long oppoId;//对立Id
+
+    private long count;
+
     public String getName() {
         return name;
     }
@@ -38,24 +39,28 @@ public class Option extends DataSupportCompat<Option> {
         this.questionId = questionId;
     }
 
+    public long getOppoId() {
+        return oppoId;
+    }
+
+    public void setOppoId(long oppoId) {
+        this.oppoId = oppoId;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 
     public static List<Option> findByQuestionId(long questionId) {
-        Cursor cursor = DataSupportCompat
-                .findBySQL("select * from option where questionId = ? group by questionId"
-                        , questionId + "");
-        List<Option> options = new ArrayList<>();
-        if (cursor == null || cursor.getCount() == 0) {
-            return options;
-        }
-        if (cursor.moveToFirst()) {
-            do {
-                Option option = new Option();
-                option.setId(cursor.getLong(cursor.getColumnIndex("id")));
-                option.setName(cursor.getString(cursor.getColumnIndex("name")));
-                option.setQuestionId(cursor.getLong(cursor.getColumnIndex("questionId")));
-                options.add(option);
-            } while (cursor.moveToNext());
-        }
-        return options;
+        return where("questionId = ?"
+                , questionId + "").find(Option.class);
+    }
+
+    public static long maxId() {
+        return max(Option.class, "id", Long.class);
     }
 }

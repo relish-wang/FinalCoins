@@ -3,6 +3,7 @@ package com.example.aedvance.finalcoins.bean;
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
+import wang.relish.litepalcompat.PrimaryKey;
 
 /**
  * <pre>
@@ -17,6 +18,7 @@ public class Question extends DataSupportCompat<Question> {
 
     private long userId;
 
+    @PrimaryKey
     private String title;
 
     public long getUserId() {
@@ -47,5 +49,10 @@ public class Question extends DataSupportCompat<Question> {
     public static int getQuestionCountById(long userId) {
         List<Question> questions = where("userId = ?", userId + "").find(Question.class);
         return questions == null ? 0 : questions.size();
+    }
+
+    public static Question findByTitle(String title) {
+        List<Question> questions = where("title = ?", title).find(Question.class);
+        return questions == null ? null : questions.size() == 0 ? null : questions.get(0);
     }
 }

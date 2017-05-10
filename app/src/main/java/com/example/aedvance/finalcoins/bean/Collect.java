@@ -15,9 +15,13 @@ import wang.relish.litepalcompat.DataSupportCompat;
  */
 public class Collect extends DataSupportCompat<Collect> {
 
+    /**
+     * 收藏者
+     */
     private long userId;
     private long questionId;
     private long optionId;
+    private boolean isCollected;
 
     public long getUserId() {
         return userId;
@@ -43,8 +47,16 @@ public class Collect extends DataSupportCompat<Collect> {
         this.optionId = optionId;
     }
 
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
     public static int getCollectCountByUserId(long userId) {
-        List<Collect> collects = where("userId = ?", userId + "").find(Collect.class);
+        List<Collect> collects = where("userId = ? and isCollected = ?", userId + "", "1").find(Collect.class);
         return collects == null ? 0 : collects.size();
     }
 }

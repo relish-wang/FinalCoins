@@ -17,11 +17,14 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void initViews(View view);
 
+    protected boolean isCreated = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(layoutId(), container, false);
         initViews(view);
+        isCreated = true;
         return view;
     }
 }

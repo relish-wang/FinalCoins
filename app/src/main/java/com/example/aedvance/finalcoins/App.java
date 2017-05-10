@@ -33,9 +33,5 @@ public class App extends Application {
                 Log.e("App", e.getMessage());
             }
         });
-//        LocationClient mLocationClient = new LocationClient(getApplicationContext());
-//        mLocationClient.registerLocationListener(new MyLocationListener());
-//
-//        SDKInitializer.initialize(this);
     }
 }
