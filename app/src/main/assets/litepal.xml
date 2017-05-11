@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="godsay" />
-    <version value="4" />
+    <version value="7" />
     <list>
         <mapping class="com.example.aedvance.finalcoins.bean.UserInfo" />
-        <mapping class="com.example.aedvance.finalcoins.bean.Collect" />
-        <mapping class="com.example.aedvance.finalcoins.bean.Interest" />
+        <mapping class="com.example.aedvance.finalcoins.bean.Answer" />
+        <mapping class="com.example.aedvance.finalcoins.bean.Follow" />
         <mapping class="com.example.aedvance.finalcoins.bean.Option" />
         <mapping class="com.example.aedvance.finalcoins.bean.Question" />
     </list>

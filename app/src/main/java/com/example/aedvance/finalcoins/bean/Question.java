@@ -1,5 +1,7 @@
 package com.example.aedvance.finalcoins.bean;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
@@ -21,6 +23,8 @@ public class Question extends DataSupportCompat<Question> {
     @PrimaryKey
     private String title;
 
+    long updateTime;
+
     public long getUserId() {
         return userId;
     }
@@ -37,6 +41,22 @@ public class Question extends DataSupportCompat<Question> {
         this.title = title;
     }
 
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public List<Option> getOption1Rate() {
+        List<Option> options = Option.findByQuestionIdGroupByOptionId(id);
+        if (options == null || options.size() != 2) {
+            throw new NullPointerException("options' number must be 2!");
+        }
+        return options;
+    }
+
     public Question getMostPopularFor(boolean isMale) {
         List<Option> options;
 
@@ -47,12 +67,19 @@ public class Question extends DataSupportCompat<Question> {
     }
 
     public static int getQuestionCountById(long userId) {
-        List<Question> questions = where("userId = ?", userId + "").find(Question.class);
+        List<Question> questions = where("userId = ?", userId + "").order("updateTime desc").find(Question.class);
         return questions == null ? 0 : questions.size();
     }
 
     public static Question findByTitle(String title) {
         List<Question> questions = where("title = ?", title).find(Question.class);
         return questions == null ? null : questions.size() == 0 ? null : questions.get(0);
+    }
+
+    public String getPublisherName() {
+        UserInfo u = UserInfo.findByUserId(userId);
+        if (u == null || TextUtils.isEmpty(u.getName()))
+            return "";
+        return u.getName();
     }
 }

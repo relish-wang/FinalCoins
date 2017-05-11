@@ -7,8 +7,8 @@ import android.widget.TextView;
 import com.example.aedvance.finalcoins.App;
 import com.example.aedvance.finalcoins.R;
 import com.example.aedvance.finalcoins.base.BaseFragment;
-import com.example.aedvance.finalcoins.bean.Collect;
-import com.example.aedvance.finalcoins.bean.Interest;
+import com.example.aedvance.finalcoins.bean.Answer;
+import com.example.aedvance.finalcoins.bean.Follow;
 import com.example.aedvance.finalcoins.bean.Question;
 import com.example.aedvance.finalcoins.bean.UserInfo;
 import com.example.aedvance.finalcoins.ui.activity.LoginActivity;
@@ -48,8 +48,8 @@ public class InfoFragment extends BaseFragment {
 
         tv_name.setText(mUser.getName());
         tv_question_count.setText(String.valueOf(Question.getQuestionCountById(mUser.getId())));
-        tv_interest_count.setText(String.valueOf(Interest.getInterestCountByUserId(mUser.getId())));
-        tv_collect_count.setText(String.valueOf(Collect.getCollectCountByUserId(mUser.getId())));
+        tv_interest_count.setText(String.valueOf(Follow.getInterestCountByUserId(mUser.getId())));
+        tv_collect_count.setText(String.valueOf(Answer.getCollectCountByUserId(mUser.getId())));
         btn_address.setText(mUser.getAddress());
         btn_mail.setText(mUser.getMail());
         btn_birth.setText(mUser.getBirth());

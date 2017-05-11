@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    public ViewPager mViewPager;
 
     private List<String> mTitleList = new ArrayList<>();//页卡标题集合
     private List<Fragment> fragments = new ArrayList<>();//页卡
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.rgb(73, 133, 208));
         }
-
         mViewPager = (ViewPager) findViewById(R.id.vp_view);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         //添加页卡视图

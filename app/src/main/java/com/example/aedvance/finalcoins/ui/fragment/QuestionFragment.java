@@ -14,11 +14,16 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aedvance.finalcoins.App;
 import com.example.aedvance.finalcoins.R;
 import com.example.aedvance.finalcoins.base.BaseFragment;
+import com.example.aedvance.finalcoins.bean.Answer;
 import com.example.aedvance.finalcoins.bean.Option;
 import com.example.aedvance.finalcoins.bean.Question;
 import com.example.aedvance.finalcoins.bean.UserInfo;
+import com.example.aedvance.finalcoins.ui.activity.QuestionActivity;
+
+import org.litepal.crud.callback.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +68,7 @@ public class QuestionFragment extends BaseFragment {
             request();
         }
     }
+
     public void request() {
         new AsyncTask<Void, Void, List<Question>>() {
 
@@ -85,7 +91,7 @@ public class QuestionFragment extends BaseFragment {
     }
 
     private void update() {
-        if(!isCreated)return;
+        if (!isCreated) return;
         if (mData == null || mData.size() == 0) {
             lv.setVisibility(View.GONE);
             tv_no_data.setVisibility(View.VISIBLE);
@@ -96,7 +102,7 @@ public class QuestionFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
     }
 
-    class MyAdapter extends BaseAdapter {
+    private class MyAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -115,7 +121,7 @@ public class QuestionFragment extends BaseFragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder holder;
+            final ViewHolder holder;
             if (view == null) {
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_zone, viewGroup, false);
                 holder = new ViewHolder(view);
@@ -123,21 +129,79 @@ public class QuestionFragment extends BaseFragment {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
-            Question q = mData.get(i);
+            final Question q = mData.get(i);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QuestionActivity.start(getActivity(), q);
+                }
+            });
+
             holder.tv_question.setText(q.getTitle());
             UserInfo u = UserInfo.findByUserId(q.getUserId());
             holder.tv_author.setText(u.getName());
             holder.iv_sex.setImageResource(u.isSex() ? R.drawable.male : R.drawable.female);
-            final List<Option> options = Option.findByQuestionId(q.getId());
-            int count = 0;
+            final List<Option> options = Option.findByQuestionIdGroupByOptionId(q.getId());
+            //取不到选项或者选项取不全
             if (options == null || options.size() != 2) {
+                throw new NullPointerException("option must be two!");
+            }
+            Option option1 = options.get(0);
+            Option option2 = options.get(1);
+            long count1 = option1.getCount();
+            long count2 = option2.getCount();
+            holder.rb_option1.setText(option1.getName());
+            holder.rb_option2.setText(option2.getName());
+
+            final Answer answer = Answer.findAnswerByUserIdAndQuestionId(App.USER.getId(), q.getId());
+
+            holder.iv_like.setImageResource(answer == null || !answer.isCollected() ?
+                    R.drawable.ic_unlike : R.drawable.ic_like);
+            holder.iv_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (answer == null) {
+                        Toast.makeText(getActivity(), "未回答的帖子不可收藏！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    final boolean isCollected = answer.isCollected();
+                    answer.setCollected(!isCollected);
+                    answer.saveAsync().listen(new SaveCallback() {
+                        @Override
+                        public void onFinish(boolean success) {
+                            holder.iv_like.setImageResource(isCollected ?
+                                    R.drawable.ic_unlike : R.drawable.ic_like);
+                            update();
+                        }
+                    });
+                }
+            });
+
+            if (answer != null) {
+                holder.rg_options.setClickable(false);
+                holder.rg_options.setEnabled(false);
+                holder.rb_option1.setEnabled(false);
+                holder.rb_option1.setClickable(false);
+                holder.rb_option2.setEnabled(false);
+                holder.rb_option2.setClickable(false);
+                if (options.get(0).getId() == answer.getOptionId()) {
+                    holder.rb_option1.setChecked(true);
+                    holder.rb_option1.append("(" + count1 + "/" + (count1 + count2) + ")");
+                } else {
+                    holder.rb_option2.setChecked(true);
+                    holder.rb_option2.append("(" + count2 + "/" + (count1 + count2) + ")");
+                }
                 return view;
             }
-            holder.rb_option1.setText(options.get(0).getName());
-            holder.rb_option2.setText(options.get(1).getName());
-
+            holder.rg_options.setClickable(true);
+            holder.rg_options.setEnabled(true);
+            holder.rb_option1.setEnabled(true);
+            holder.rb_option1.setClickable(true);
+            holder.rb_option1.setChecked(false);
+            holder.rb_option2.setChecked(false);
+            holder.rb_option2.setEnabled(true);
+            holder.rb_option2.setClickable(true);
             holder.rg_options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                     Option option = null;
@@ -149,7 +213,35 @@ public class QuestionFragment extends BaseFragment {
                             option = options.get(1);
                             break;
                     }
-                    Toast.makeText(getActivity(), option.getName(), Toast.LENGTH_SHORT).show();
+                    Answer answer = new Answer();
+                    answer.setUserId(App.USER.getId());
+                    answer.setQuestionId(q.getId());
+                    answer.setCollected(false);
+                    assert option != null;
+                    answer.setOptionId(option.getId());
+                    final Option finalOption = option;
+                    answer.saveAsync().listen(new SaveCallback() {
+                        @Override
+                        public void onFinish(boolean success) {
+                            if (!success) return;
+                            long count = finalOption.getCount();
+                            finalOption.setCount(count + 1);
+                            finalOption.saveAsync().listen(new SaveCallback() {
+                                @Override
+                                public void onFinish(boolean success) {
+                                    if (success) {
+                                        q.setUpdateTime(System.currentTimeMillis());
+                                        q.saveAsync().listen(new SaveCallback() {
+                                            @Override
+                                            public void onFinish(boolean success) {
+                                                update();
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             });
             return view;
@@ -161,7 +253,7 @@ public class QuestionFragment extends BaseFragment {
             RadioGroup rg_options;
             RadioButton rb_option1, rb_option2;
 
-            public ViewHolder(View v) {
+            ViewHolder(View v) {
                 tv_question = (TextView) v.findViewById(R.id.tv_question);
                 tv_author = (TextView) v.findViewById(R.id.tv_author);
                 rg_options = (RadioGroup) v.findViewById(R.id.rg_options);
@@ -170,7 +262,6 @@ public class QuestionFragment extends BaseFragment {
                 iv_like = (ImageView) v.findViewById(R.id.iv_like);
                 iv_sex = (ImageView) v.findViewById(R.id.iv_sex);
             }
-
         }
     }
 }

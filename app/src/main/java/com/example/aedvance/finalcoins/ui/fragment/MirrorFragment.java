@@ -12,6 +12,7 @@ import com.example.aedvance.finalcoins.base.BaseFragment;
 import com.example.aedvance.finalcoins.bean.Option;
 import com.example.aedvance.finalcoins.bean.Question;
 import com.example.aedvance.finalcoins.task.PostQuestionTask;
+import com.example.aedvance.finalcoins.ui.activity.MainActivity;
 import com.example.aedvance.finalcoins.util.EasyCallback;
 
 /**
@@ -47,6 +48,7 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
                 String option1 = et_option1.getText().toString().trim();
                 String option2 = et_option2.getText().toString().trim();
                 Question q = new Question();
+                q.setUpdateTime(System.currentTimeMillis());
                 q.setTitle(title);
                 q.setUserId(App.USER.getId());
                 Option o1 = new Option();
@@ -62,6 +64,7 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
                         et_title.setText("");
                         et_option1.setText("");
                         et_option2.setText("");
+                        ((MainActivity)getActivity()).mViewPager.setCurrentItem(0);
                     }
 
                     @Override

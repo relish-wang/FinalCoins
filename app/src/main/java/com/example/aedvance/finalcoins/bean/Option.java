@@ -60,6 +60,12 @@ public class Option extends DataSupportCompat<Option> {
                 , questionId + "").find(Option.class);
     }
 
+    public static List<Option> findByQuestionIdGroupByOptionId(long questionId) {
+        return where("questionId = ? group by id"
+                , questionId + "").find(Option.class);
+    }
+
+
     public static long maxId() {
         return max(Option.class, "id", Long.class);
     }

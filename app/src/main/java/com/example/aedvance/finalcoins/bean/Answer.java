@@ -9,11 +9,11 @@ import wang.relish.litepalcompat.DataSupportCompat;
  *     author : aedvance
  *     e-mail : 740847193@qq.com
  *     time   : 2017/5/7
- *     desc   :
+ *     desc   : 回答表
  *     version: 1.0
  * </pre>
  */
-public class Collect extends DataSupportCompat<Collect> {
+public class Answer extends DataSupportCompat<Answer> {
 
     /**
      * 收藏者
@@ -56,7 +56,12 @@ public class Collect extends DataSupportCompat<Collect> {
     }
 
     public static int getCollectCountByUserId(long userId) {
-        List<Collect> collects = where("userId = ? and isCollected = ?", userId + "", "1").find(Collect.class);
-        return collects == null ? 0 : collects.size();
+        List<Answer> answers = where("userId = ? and isCollected = ?", userId + "", "1").find(Answer.class);
+        return answers == null ? 0 : answers.size();
+    }
+
+    public static Answer findAnswerByUserIdAndQuestionId(long userId, long quesionId) {
+        List<Answer> answers = where("userId = ? and questionId = ?", userId + "", quesionId + "").find(Answer.class);
+        return (answers == null || answers.size() == 0) ? null : answers.get(0);
     }
 }

@@ -1,11 +1,14 @@
 package com.example.aedvance.finalcoins;
 
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
 import com.example.aedvance.finalcoins.bean.UserInfo;
 
 import org.litepal.LitePal;
+
+import java.util.WeakHashMap;
 
 /**
  * <pre>
@@ -21,6 +24,7 @@ public class App extends Application {
     public static App CONTEXT;
 
     public static UserInfo USER;
+    private static WeakHashMap<String, Activity> mActivities = new WeakHashMap<>();
 
     @Override
     public void onCreate() {
@@ -34,4 +38,42 @@ public class App extends Application {
             }
         });
     }
+
+
+    /**
+     * Activity入栈
+     *
+     * @param activity activity
+     */
+    public static synchronized void addActivity(Activity activity) {
+        mActivities.put(activity.getClass().getName(), activity);
+    }
+
+    /**
+     * Activity出栈
+     *
+     * @param activityNames activity名
+     */
+    public static synchronized void removeActivities(String... activityNames) {
+        for (String activityClassName : activityNames) {
+            Activity activity = mActivities.get(activityClassName);
+            if (activity != null) {
+                activity.finish();
+            }
+            mActivities.remove(activityClassName);
+        }
+    }
+
+    /**
+     * 退出Activity
+     */
+    public static void exitApp() {
+        Object[] allActivityNames = mActivities.keySet().toArray();
+        String[] names = new String[allActivityNames.length];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = allActivityNames[i].toString();
+        }
+        removeActivities(names);
+    }
+
 }
