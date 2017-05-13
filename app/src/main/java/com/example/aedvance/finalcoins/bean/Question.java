@@ -1,5 +1,6 @@
 package com.example.aedvance.finalcoins.bean;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import wang.relish.litepalcompat.PrimaryKey;
  *     version: 1.0
  * </pre>
  */
-public class Question extends DataSupportCompat<Question> {
+public class Question extends DataSupportCompat<Question> implements Comparable<Question> {
 
     private long userId;
 
@@ -81,5 +82,10 @@ public class Question extends DataSupportCompat<Question> {
         if (u == null || TextUtils.isEmpty(u.getName()))
             return "";
         return u.getName();
+    }
+
+    @Override
+    public int compareTo(@NonNull Question o) {
+        return updateTime < o.updateTime ? 1 : updateTime == o.updateTime ? 0 : -1;
     }
 }

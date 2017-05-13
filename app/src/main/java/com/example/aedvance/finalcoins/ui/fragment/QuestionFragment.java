@@ -26,6 +26,7 @@ import com.example.aedvance.finalcoins.ui.activity.QuestionActivity;
 import org.litepal.crud.callback.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,6 +85,7 @@ public class QuestionFragment extends BaseFragment {
                     update();
                     return;
                 }
+                Collections.sort(questions);
                 mData = questions;
                 update();
             }
@@ -204,12 +206,19 @@ public class QuestionFragment extends BaseFragment {
             holder.rg_options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+
                     Option option = null;
                     switch (checkedId) {
                         case R.id.rb_option1:
+                            if (!holder.rb_option1.isEnabled()) {
+                                return;
+                            }
                             option = options.get(0);
                             break;
                         case R.id.rb_option2:
+                            if (!holder.rb_option2.isEnabled()) {
+                                return;
+                            }
                             option = options.get(1);
                             break;
                     }
