@@ -37,7 +37,7 @@ public class Follow extends DataSupportCompat<Follow> {
     }
 
     public static int getInterestCountByUserId(long userId) {
-        List<Follow> follows = where("masterId = ?", userId + "").find(Follow.class);
+        List<Follow> follows = where("followerId = ?", userId + "").find(Follow.class);
         return follows == null ? 0 : follows.size();
     }
 
@@ -58,8 +58,11 @@ public class Follow extends DataSupportCompat<Follow> {
         return result;
     }
 
-    public static void unFollow(long userId) {
+    public static int unFollow(long userId) {
         Follow f = findFollowByMasterIdAndUser(userId);
-        if (f != null) f.delete();
+        if (f != null) {
+            return f.delete();
+        }
+        return 1;
     }
 }

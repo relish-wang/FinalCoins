@@ -50,7 +50,7 @@
             android:text="爱吃棉花糖的托尼"
             android:textSize="16sp" />
 
-        <com.example.aedvance.finalcoins.ui.view.RippleButtonView
+        <Button
             android:id="@+id/btn_interest"
             android:layout_width="78dp"
             android:layout_height="36dp"

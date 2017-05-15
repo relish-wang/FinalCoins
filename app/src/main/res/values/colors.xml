@@ -8,4 +8,7 @@
     <color name="et_focus_color">#b2d4dc</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+
+    <color name="content_text_color">#343434</color>
+    <color name="color_bbbbbb">#BBBBBB</color>
 </resources>

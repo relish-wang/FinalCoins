@@ -1,6 +1,7 @@
 package com.example.aedvance.finalcoins.ui.fragment;
 
 import android.support.design.widget.FloatingActionButton;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -47,6 +48,24 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
                 String title = et_title.getText().toString().trim();
                 String option1 = et_option1.getText().toString().trim();
                 String option2 = et_option2.getText().toString().trim();
+                if (TextUtils.isEmpty(title)) {
+                    Toast.makeText(getActivity(), "标题不得为空！", Toast.LENGTH_SHORT).show();
+                    et_title.setError("标题不得为空！");
+                    et_title.requestFocus();
+                    return;
+                }
+                if (TextUtils.isEmpty(option1)) {
+                    Toast.makeText(getActivity(), "选项不得为空！", Toast.LENGTH_SHORT).show();
+                    et_option1.setError("选项不得为空！");
+                    et_option1.requestFocus();
+                    return;
+                }
+                if (TextUtils.isEmpty(option2)) {
+                    Toast.makeText(getActivity(), "标题不得为空！", Toast.LENGTH_SHORT).show();
+                    et_option2.setError("选项不得为空！");
+                    et_option2.requestFocus();
+                    return;
+                }
                 Question q = new Question();
                 q.setUpdateTime(System.currentTimeMillis());
                 q.setTitle(title);
@@ -64,7 +83,7 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
                         et_title.setText("");
                         et_option1.setText("");
                         et_option2.setText("");
-                        ((MainActivity)getActivity()).mViewPager.setCurrentItem(0);
+                        ((MainActivity) getActivity()).mViewPager.setCurrentItem(0);
                     }
 
                     @Override

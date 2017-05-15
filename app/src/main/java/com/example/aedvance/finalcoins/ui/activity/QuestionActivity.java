@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,8 @@ import com.example.aedvance.finalcoins.bean.Answer;
 import com.example.aedvance.finalcoins.bean.Follow;
 import com.example.aedvance.finalcoins.bean.Option;
 import com.example.aedvance.finalcoins.bean.Question;
-import com.example.aedvance.finalcoins.ui.view.RippleButtonView;
+
+import org.litepal.crud.callback.SaveCallback;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +59,7 @@ public class QuestionActivity extends BaseActivity {
     }
 
     TextView tv_title, tv_user_name, tv_option1_name, tv_option2_name, tv_option1_rate, tv_option2_rate;
-    RippleButtonView btn_interest;
+    Button btn_interest;
     boolean isFollowing = false;
 
     @Override
@@ -69,23 +71,35 @@ public class QuestionActivity extends BaseActivity {
         tv_option1_rate = (TextView) findViewById(R.id.tv_option1_rate);
         tv_option2_rate = (TextView) findViewById(R.id.tv_option2_rate);
 
-        btn_interest = (RippleButtonView) findViewById(R.id.btn_interest);
+        btn_interest = (Button) findViewById(R.id.btn_interest);
 
         tv_title.setText(mQuestion.getTitle());
         tv_user_name.setText(mQuestion.getPublisherName());
 
         isFollowing = Follow.amIFollowing(mQuestion.getUserId());
-        btn_interest.setFollowed(isFollowing, true);
+        setBtnInterest(isFollowing);
         btn_interest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isFollowing) {
-                    Follow.unFollow(mQuestion.getUserId());
+                    int row = Follow.unFollow(mQuestion.getUserId());
+                    if (row > 0) {
+                        setBtnInterest(!isFollowing);
+                        isFollowing = false;
+                    }
                 } else {
                     Follow follow = new Follow();
                     follow.setMasterId(mQuestion.getUserId());
                     follow.setFollowerId(App.USER.getId());
-                    follow.save();
+                    follow.saveAsync().listen(new SaveCallback() {
+                        @Override
+                        public void onFinish(boolean success) {
+                            if (success) {
+                                setBtnInterest(!isFollowing);
+                                isFollowing = true;
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -120,6 +134,17 @@ public class QuestionActivity extends BaseActivity {
         tv_option2_rate.setLayoutParams(params2);
         tv_option1_rate.setText(String.format(Locale.CHINA, "%.1f%%", count1 * 100f / (count1 * 1.0 + count2 * 1.0)));
         tv_option2_rate.setText(String.format(Locale.CHINA, "%.1f%%", count2 * 100f / (count1 * 1.0 + count2 * 1.0)));
+    }
+
+    private void setBtnInterest(boolean isFollowing) {
+        if(mQuestion.getUserId()==App.USER.getId()){
+            btn_interest.setClickable(false);
+            btn_interest.setVisibility(View.GONE);
+            return;
+        }
+        btn_interest.setText(isFollowing ? "已关注" : "+关注");
+        btn_interest.setBackground(ContextCompat.getDrawable(this, isFollowing ? R.drawable.btn_followed_selector : R.drawable.btn_blue_selector));
+        btn_interest.setTextColor(ContextCompat.getColor(this, isFollowing ? R.color.content_text_color : R.color.white));
     }
 
     public static void start(Context context, Question question) {
