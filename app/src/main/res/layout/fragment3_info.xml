@@ -51,6 +51,7 @@
             android:paddingTop="12dp">
 
             <LinearLayout
+                android:id="@+id/ll_question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -75,6 +76,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_collect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,6 +101,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_follow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -113,7 +116,7 @@
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/tv_interest_count"
+                    android:id="@+id/tv_following_count"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

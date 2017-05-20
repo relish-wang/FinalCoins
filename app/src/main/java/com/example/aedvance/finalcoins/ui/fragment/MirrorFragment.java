@@ -4,6 +4,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -13,8 +14,9 @@ import com.example.aedvance.finalcoins.base.BaseFragment;
 import com.example.aedvance.finalcoins.bean.Option;
 import com.example.aedvance.finalcoins.bean.Question;
 import com.example.aedvance.finalcoins.task.PostQuestionTask;
-import com.example.aedvance.finalcoins.ui.activity.MainActivity;
 import com.example.aedvance.finalcoins.util.EasyCallback;
+
+import java.util.Random;
 
 /**
  * Created by aedvance on 2017/5/7.
@@ -31,12 +33,16 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
 
     FloatingActionButton fab;
 
+    Button btn_mirror;
 
     @Override
     protected void initViews(View view) {
         et_title = (EditText) view.findViewById(R.id.et_title);
         et_option1 = (EditText) view.findViewById(R.id.et_option1);
         et_option2 = (EditText) view.findViewById(R.id.et_option2);
+        btn_mirror = (Button) view.findViewById(R.id.btn_mirror);
+
+
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
     }
@@ -70,20 +76,21 @@ public class MirrorFragment extends BaseFragment implements OnClickListener {
                 q.setUpdateTime(System.currentTimeMillis());
                 q.setTitle(title);
                 q.setUserId(App.USER.getId());
-                Option o1 = new Option();
+                final Option o1 = new Option();
                 o1.setName(option1);
                 o1.setCount(0);
-                Option o2 = new Option();
+                final Option o2 = new Option();
                 o2.setName(option2);
                 o2.setCount(0);
                 new PostQuestionTask(q, o1, o2, new EasyCallback<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getActivity(), "发布成功！", Toast.LENGTH_SHORT).show();
+                        boolean b = new Random().nextBoolean();
+                        btn_mirror.setText(b ? o1.getName() : o2.getName());
                         et_title.setText("");
                         et_option1.setText("");
                         et_option2.setText("");
-                        ((MainActivity) getActivity()).mViewPager.setCurrentItem(0);
                     }
 
                     @Override

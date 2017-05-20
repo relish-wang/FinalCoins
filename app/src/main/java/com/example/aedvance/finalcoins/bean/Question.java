@@ -3,10 +3,12 @@ package com.example.aedvance.finalcoins.bean;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.example.aedvance.finalcoins.App;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
-import wang.relish.litepalcompat.PrimaryKey;
 
 /**
  * <pre>
@@ -21,7 +23,6 @@ public class Question extends DataSupportCompat<Question> implements Comparable<
 
     private long userId;
 
-    @PrimaryKey
     private String title;
 
     long updateTime;
@@ -84,8 +85,31 @@ public class Question extends DataSupportCompat<Question> implements Comparable<
         return u.getName();
     }
 
+    public static List<Question> findByCurrentUserId(){
+       return findByUserId(App.USER.getId());
+    }
+
     @Override
     public int compareTo(@NonNull Question o) {
         return updateTime < o.updateTime ? 1 : updateTime == o.updateTime ? 0 : -1;
+    }
+
+    public static List<Question> findByCurrentUserIdCollected() {
+        return findByUserIdCollected(App.USER.getId());
+    }
+
+    public static List<Question> findByUserId(long id) {
+        List<Question> questions = where("userId = ?", id+"").find(Question.class);
+        return questions == null ? new ArrayList<Question>() : questions;
+    }
+
+    public static List<Question> findByUserIdCollected(long id) {
+        List<Answer> answers = Answer.getCollectByUserId(id);
+        List<Question> questions = new ArrayList<>();
+        for (Answer answer : answers) {
+            List<Question> qs = where("id = ?", answer.getQuestionId()+"").find(Question.class);
+            questions.addAll(qs);
+        }
+        return questions;
     }
 }

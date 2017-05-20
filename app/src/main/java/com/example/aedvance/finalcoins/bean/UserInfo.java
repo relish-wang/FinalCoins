@@ -3,10 +3,12 @@ package com.example.aedvance.finalcoins.bean;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.example.aedvance.finalcoins.App;
 import com.example.aedvance.finalcoins.util.SPUtil;
 
 import org.litepal.crud.ClusterQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
@@ -27,7 +29,7 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     private String name;
     private String pwd;
 
-    private boolean sex;//0:男，1：女
+    private boolean sex;//0true:男，1false：女
     private String mail;
     private String address;
     private String birth;
@@ -127,5 +129,21 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
 
     public static UserInfo findByUserId(long userId) {
         return UserInfo.find(UserInfo.class, userId);
+    }
+
+    public static List<UserInfo> findMasterUsersByFollowerId(long followerId){
+        List<Long> ids = Follow.findMasterIdsByFollowedId(followerId);
+        long[] idArr = new long[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            idArr[i] = ids.get(i);
+        }
+        if(idArr.length==0){//修复蜜汁自我关注Bug
+            return new ArrayList<>();
+        }
+        return findAll(UserInfo.class, idArr);
+    }
+
+    public static List<UserInfo> findUsersByCurrentUserId() {
+       return findMasterUsersByFollowerId(App.USER.getId());
     }
 }

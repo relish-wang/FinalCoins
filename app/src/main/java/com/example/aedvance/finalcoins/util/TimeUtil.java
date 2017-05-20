@@ -40,6 +40,32 @@ public class TimeUtil {
             Date d = formatter.parse(datetime);
             return d.getTime();
         } catch (ParseException e) {
+            try {
+                SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+
+                Date d = formatter2.parse(datetime);
+
+                return d.getTime();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * datetime格式转时间long
+     *
+     * @return long类型时间
+     */
+    public static long dateTimeToLongYMR(String datetime) {
+        if (TextUtils.isEmpty(datetime)) return 0;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        try {
+            Date d = formatter.parse(datetime);
+            return d.getTime();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return 0;
@@ -161,13 +187,13 @@ public class TimeUtil {
 
     public static String getConstellationByDatetime(String date) {
         try {
-            final String[] constellationArr = {"魔羯座", "水瓶座", "双鱼座", "牡羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "魔羯座"};
+            final String[] constellationArr = {"魔羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "魔羯座"};
 
             if (TextUtils.isEmpty(date) || date.equals("未设置")) {
                 return "未知星座";
             }
             Calendar calendar = datetime2Calendar(date);
-            int m = calendar.get(Calendar.MONTH);
+            int m = calendar.get(Calendar.MONTH)+1;
             int d = calendar.get(Calendar.DAY_OF_MONTH);
 
             final int[] constellationEdgeDay = {20, 18, 20, 20, 20, 21, 22, 22, 22, 22, 21, 21};
@@ -181,7 +207,7 @@ public class TimeUtil {
             }
             //default to return 魔羯
             return constellationArr[11];
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "未知设置";
         }

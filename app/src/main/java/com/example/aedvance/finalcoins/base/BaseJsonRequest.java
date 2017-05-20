@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.example.aedvance.finalcoins.util.OkHttpInvoker;
 
 import org.json.JSONException;
@@ -80,7 +79,6 @@ public abstract class BaseJsonRequest<T> extends BaseRequest<T> {
                 return response;
             } else if (resultCode == 3) { // 获取信息失败，session过期
 
-                // TODO 重新登录
 
                 response.errorMessage = "用户信息失效，请重新登录";
                 return response;

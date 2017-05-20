@@ -1,7 +1,10 @@
 package com.example.aedvance.finalcoins.bean;
 
+import android.database.Cursor;
+
 import com.example.aedvance.finalcoins.App;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
@@ -36,7 +39,7 @@ public class Follow extends DataSupportCompat<Follow> {
         this.followerId = followerId;
     }
 
-    public static int getInterestCountByUserId(long userId) {
+    public static int getFollowingCountByUserId(long userId) {
         List<Follow> follows = where("followerId = ?", userId + "").find(Follow.class);
         return follows == null ? 0 : follows.size();
     }
@@ -64,5 +67,25 @@ public class Follow extends DataSupportCompat<Follow> {
             return f.delete();
         }
         return 1;
+    }
+
+    public static List<Long> findMasterIdsByFollowedId(long id) {
+        Cursor cursor = findBySQL("select masterId from Follow where followerId = ?", id + "");
+        List<Long> ids = new ArrayList<>();
+        if (cursor == null || cursor.getCount() == 0) {
+            return ids;
+        }
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getLong(cursor.getColumnIndex("masterid")));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        for (Long aLong : ids) {
+            if(aLong==id){
+                ids.remove(aLong);
+            }
+        }
+        return ids;
     }
 }

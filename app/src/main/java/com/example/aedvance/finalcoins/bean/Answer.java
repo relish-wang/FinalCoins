@@ -1,5 +1,9 @@
 package com.example.aedvance.finalcoins.bean;
 
+import com.example.aedvance.finalcoins.App;
+
+import org.litepal.crud.async.SaveExecutor;
+
 import java.util.List;
 
 import wang.relish.litepalcompat.DataSupportCompat;
@@ -55,13 +59,33 @@ public class Answer extends DataSupportCompat<Answer> {
         isCollected = collected;
     }
 
+    public static List<Answer> getCollectByCurrentUserId() {
+        List<Answer> answers = where("userId = ? and isCollected = ?", App.USER.getId() + "", "1").find(Answer.class);
+        return answers;
+    }
+
+    public static List<Answer> getCollectByUserId(long id) {
+        List<Answer> answers = where("userId = ? and isCollected = ?", id + "", "1").find(Answer.class);
+        return answers;
+    }
+
     public static int getCollectCountByUserId(long userId) {
         List<Answer> answers = where("userId = ? and isCollected = ?", userId + "", "1").find(Answer.class);
         return answers == null ? 0 : answers.size();
     }
 
-    public static Answer findAnswerByUserIdAndQuestionId(long userId, long quesionId) {
-        List<Answer> answers = where("userId = ? and questionId = ?", userId + "", quesionId + "").find(Answer.class);
+    public static Answer findAnswerByUserIdAndQuestionId(long userId, long questionId) {
+        List<Answer> answers = where("userId = ? and questionId = ?", userId + "", questionId + "").find(Answer.class);
         return (answers == null || answers.size() == 0) ? null : answers.get(0);
+    }
+
+    @Override
+    public synchronized boolean save() {
+        return super.save();
+    }
+
+    @Override
+    public SaveExecutor saveAsync() {
+        return super.saveAsync();
     }
 }
