@@ -34,7 +34,6 @@ public class UserInfo extends DataSupportCompat<UserInfo> {
     private String address;
     private String birth;
 
-
     public String getName() {
         return name;
     }
